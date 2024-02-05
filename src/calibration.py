@@ -4,7 +4,17 @@ from glob import glob
 
 class Calibration():
 
-    def __init__(self, cal_folder, board_size):
+    def __init__(self, cal_folder:str, board_size:tuple):
+        """Class used for camera calibration
+
+        Parameters
+        ----------
+        cal_folder : str
+            Directory containing calibration images
+        board_size : tuple
+            Tuple describing number of inner corners (x, y)
+        """
+
         self.mtx = None
         self.dist = None
 
@@ -31,4 +41,16 @@ class Calibration():
             print('Camera calibration not possible.')
 
     def undistort(img):
+        """Undistorts image given camera calibartion
+
+        Parameters
+        ----------
+        img : array-like
+            Image to by undistorted
+
+        Returns
+        -------
+        array-like
+            Undistorted image
+        """
         return cv2.undistort(img, self.mtx, self.dist, None, self.mtx)
