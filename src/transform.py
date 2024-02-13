@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-class transform():
+class Transform():
 
     def __init__(self):
         """Class used to transform images from front to bird's-eye views.

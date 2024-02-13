@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-class lines():
+class Lines():
 
     def __init__(self):
         self.img = None
