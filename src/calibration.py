@@ -18,6 +18,7 @@ class Calibration():
         self.mtx = None
         self.dist = None
 
+        fnames = glob.glob("{}/*".format(cal_folder))
         imgpoints = []
         objpoints = []
 
@@ -40,7 +41,7 @@ class Calibration():
         if not ret:
             print('Camera calibration not possible.')
 
-    def undistort(img):
+    def undistort(self, img):
         """Undistorts image given camera calibartion
 
         Parameters
