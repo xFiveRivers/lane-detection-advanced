@@ -17,7 +17,7 @@ class Transform():
         matrix_inv : array-like
             Matrix to transform from bird's-eye to front. 
         """
-        self.src = np.int32([
+        self.src = np.float32([
             (550, 450),
             (250, 650),
             (1175, 650),
