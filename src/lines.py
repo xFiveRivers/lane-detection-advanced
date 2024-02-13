@@ -5,9 +5,9 @@ class Lines():
 
     def __init__(self):
         self.img = None
-        self.margin = 100
+        self.margin = 50
         self.min_pixels = 50
-        self.n_windows = 9
+        self.n_windows = 6
         self.non_zero = None
         self.non_zero_x = None
         self.non_zero_y = None
