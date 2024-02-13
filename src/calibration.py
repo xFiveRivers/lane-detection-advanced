@@ -18,7 +18,7 @@ class Calibration():
         self.mtx = None
         self.dist = None
 
-        fnames = glob.glob("{}/*".format(cal_folder))
+        fnames = glob("{}/*".format(cal_folder))
         imgpoints = []
         objpoints = []
 
