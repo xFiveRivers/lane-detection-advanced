@@ -32,13 +32,16 @@ class Lines():
 
         out_img = np.zeros((self.img.shape[0], self.img.shape[1], 3))
 
-        cv2.polylines(out_img, [draw_points_left], False, (0, 255, 0), thickness=8)
-        cv2.polylines(out_img, [draw_points_right], False, (0, 255, 0), thickness=8)
+        cv2.polylines(out_img, [draw_points_left], False, (0, 255, 0), thickness=12)
+        cv2.polylines(out_img, [draw_points_right], False, (0, 255, 0), thickness=12)
         
-        return out_img
+        return (out_img).astype(np.uint8)
 
 
     def get_features(self):
+
+        # Get height of windows
+        self.window_height = int(self.img.shape[0] // self.n_windows)
 
         # Create historgram
         hist = np.sum(self.img[self.img.shape[0] // 2:, :], axis=0)
