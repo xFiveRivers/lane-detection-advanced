@@ -10,10 +10,12 @@ class Threshold():
         h_channel = hsv[:, :, 0]
         v_channel = hsv[:, :, 2]
 
-        h_img = np.zeros_like(v_channel)
+        h_img = np.zeros_like(h_channel)
         h_img[(h_channel >= h_thresh[0]) & (h_channel <= h_thresh[1])] = 1
 
         v_img = np.zeros_like(v_channel)
         v_img[(v_channel >= v_thresh[0]) & (v_channel <= v_thresh[1])] = 1
 
-        return h_img | v_img
+        output = v_img | h_img
+        
+        return output
