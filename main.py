@@ -27,6 +27,39 @@ class LaneDetection:
         return out_img
     
     def process_video(self, input_path, output_path):
-        input_clip = VideoFileClip(input_path)
-        output_clip = input_clip.fl_image(self.detect)
-        output_clip.write_videofile(output_path, audio=False)
+        cap = cv2.VideoCapture(input_path)
+
+        frame_width = int(cap.get(3))
+        frame_height = int(cap.get(4)) 
+
+        out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MJPG"), 24, (frame_width, frame_height))
+
+        if cap.isOpened() == False:
+            return 'Error openeing video.'
+        
+        i = 0
+
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            if ret == True:
+                processed_frame = self.detect(frame)
+                # print(i)
+                out.write(processed_frame)
+                i += 1           
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                elif i == 120:
+                    break
+            else:
+                break
+        
+        cap.release()
+        out.release()
+        cv2.destroyAllWindows()
+
+
+    def process_image(self, input_path, output_path):
+        input_img = cv2.imread(input_path)
+        output_img = self.detect(input_img)
+        cv2.imwrite(output_path, output_img)
+
