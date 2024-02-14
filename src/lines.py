@@ -32,8 +32,8 @@ class Lines():
 
         out_img = np.zeros((self.img.shape[0], self.img.shape[1], 3))
 
-        cv2.polylines(out_img, [draw_points_left], False, (0, 255, 0), thickness=12)
-        cv2.polylines(out_img, [draw_points_right], False, (0, 255, 0), thickness=12)
+        cv2.polylines(out_img, [draw_points_left], False, (0, 255, 0), thickness=20)
+        cv2.polylines(out_img, [draw_points_right], False, (0, 255, 0), thickness=20)
         
         return (out_img).astype(np.uint8)
 
