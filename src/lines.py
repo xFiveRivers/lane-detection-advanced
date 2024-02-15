@@ -7,7 +7,8 @@ class Lines():
         self.img = None
         self.margin = 100
         self.min_pixels = 50
-        self.n_windows = 9
+        self.n_windows = 8
+        self.horiz_shift_factor = 1
         self.non_zero = None
         self.non_zero_x = None
         self.non_zero_y = None
@@ -49,7 +50,8 @@ class Lines():
         self.window_height = int(self.img.shape[0] // self.n_windows)
 
         # Create historgram
-        hist = np.sum(self.img[self.img.shape[0] // 2:, :], axis=0)
+        y_cutoff = int(self.img.shape[0] * (1 - (1 / 3)))
+        hist = np.sum(self.img[y_cutoff:, :], axis=0)
 
         # Define midpoint of historgram
         midpoint = int(hist.shape[0] / 2)
@@ -121,9 +123,9 @@ class Lines():
 
             # Update pointers
             if len(left_window_x) >= self.min_pixels:
-                self.left_x_curr = np.int32(np.mean(left_window_x))
+                self.left_x_curr = np.int32(np.mean(left_window_x) * self.horiz_shift_factor)
             if len(right_window_x) >= self.min_pixels:
-                self.right_x_curr = np.int32(np.mean(right_window_x))
+                self.right_x_curr = np.int32(np.mean(right_window_x) * self.horiz_shift_factor)
             self.y_curr -= self.window_height
 
         return self.draw_lines(left_x, left_y, right_x, right_y)
