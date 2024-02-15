@@ -9,18 +9,19 @@ from src.lines import *
 
 class LaneDetection:
 
-    def __init__(self):
+    def __init__(self, draw_boxes=False):
         self.calibration = Calibration('camera_cal', (9, 6))
         self.tranform = Transform()
         self.threshold = Threshold()
         self.lines = Lines()
+        self.draw_boxes = draw_boxes
 
     def detect(self, img):
         orig_img = np.copy(img)
         img = self.calibration.undistort(img)
         img = self.tranform.orig_to_bev(img)
         img = self.threshold.apply_threshold(img, (210, 255), (20, 30))
-        img = self.lines.sliding_window(img)
+        img = self.lines.sliding_window(img, self.draw_boxes)
         img = self.tranform.bev_to_orig(img)
         out_img = cv2.addWeighted(orig_img, 0.8, img, 1.0, 0.0)
 
@@ -45,6 +46,12 @@ class LaneDetection:
                 processed_frame = self.detect(frame)
                 # print(i)
                 out.write(processed_frame)
+
+                # if i == 6:
+                #     cv2.imwrite(f'output_media/debug/problem_frames/frame_{i}.png', frame)
+                # cv2.imwrite(f'output_media/debug/frame_{i}.png', np.concatenate((frame, processed_frame), axis=1))
+
+            
                 i += 1           
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
@@ -52,6 +59,7 @@ class LaneDetection:
                     break
             else:
                 break
+
         
         cap.release()
         out.release()
