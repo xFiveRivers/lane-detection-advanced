@@ -14,20 +14,19 @@ class LaneDetection:
         self.tranform = Transform()
         self.threshold = Threshold()
         self.lines = Lines()
-        self.draw_boxes = draw_boxes
 
-    def detect(self, img):
+    def detect(self, img, draw_boxes):
         orig_img = np.copy(img)
         img = self.calibration.undistort(img)
         img = self.tranform.orig_to_bev(img)
         img = self.threshold.apply_threshold(img, (210, 255), (20, 30))
-        img = self.lines.sliding_window(img, self.draw_boxes)
+        img = self.lines.sliding_window(img, draw_boxes)
         img = self.tranform.bev_to_orig(img)
         out_img = cv2.addWeighted(orig_img, 0.8, img, 1.0, 0.0)
 
         return out_img
     
-    def process_video(self, input_path, output_path):
+    def process_video(self, input_path, output_path, debug=False, draw_boxes=False):
         cap = cv2.VideoCapture(input_path)
 
         frame_width = int(cap.get(3))
@@ -43,15 +42,10 @@ class LaneDetection:
         while(cap.isOpened()):
             ret, frame = cap.read()
             if ret == True:
-                processed_frame = self.detect(frame)
+                processed_frame = self.detect(frame, draw_boxes)
                 # print(i)
                 out.write(processed_frame)
 
-                # if i == 6:
-                #     cv2.imwrite(f'output_media/debug/problem_frames/frame_{i}.png', frame)
-                # cv2.imwrite(f'output_media/debug/frame_{i}.png', np.concatenate((frame, processed_frame), axis=1))
-
-            
                 i += 1           
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
@@ -60,13 +54,17 @@ class LaneDetection:
             else:
                 break
 
-        
+        if debug == True:
+            cv2.imwrite(f'output_media/debug/problem_frames/{i}_frame.png', frame)
+            cv2.imwrite(f'output_media/debug/problem_frames/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
+
         cap.release()
         out.release()
         cv2.destroyAllWindows()
 
+        
 
-    def process_image(self, input_path, output_path):
+    def process_image(self, input_path, output_path, draw_boxes=False):
         input_img = cv2.imread(input_path)
         output_img = self.detect(input_img)
         cv2.imwrite(output_path, output_img)
