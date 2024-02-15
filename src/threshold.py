@@ -14,6 +14,10 @@ class Threshold():
         white_lower_range = np.array([215])
         white_upper_range = np.array([255])
 
+        # Specify value channel threshold range
+        v_channel_lower_range = np.array([170])
+        v_channel_upper_range = np.array([255])
+
         # Get colour spaces
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -21,8 +25,9 @@ class Threshold():
         # Apply colour-specific thresholding
         yellow = cv2.inRange(hsv, yellow_lower_range, yellow_upper_range)
         white = cv2.inRange(gray, white_lower_range, white_upper_range)
+        value = cv2.inRange(hsv[:, :, 2], v_channel_lower_range, v_channel_upper_range)
         
-        output = yellow | white
+        output = yellow | white | value
 
         # h_channel = hsv[:, :, 0]
         # v_channel = hsv[:, :, 2]
