@@ -46,26 +46,23 @@ class LaneDetection:
                 # print(i)
                 out.write(processed_frame)
 
+                if debug == True:
+                    cv2.imwrite(f'output_media/debug/problem_frames/{i}_frame.png', frame)
+                    cv2.imwrite(f'output_media/debug/problem_frames/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
+
                 i += 1           
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-                elif i == 120:
-                    break
             else:
                 break
-
-        if debug == True:
-            cv2.imwrite(f'output_media/debug/problem_frames/{i}_frame.png', frame)
-            cv2.imwrite(f'output_media/debug/problem_frames/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
 
         cap.release()
         out.release()
         cv2.destroyAllWindows()
 
-        
 
     def process_image(self, input_path, output_path, draw_boxes=False):
         input_img = cv2.imread(input_path)
-        output_img = self.detect(input_img)
+        output_img = self.detect(input_img, draw_boxes)
         cv2.imwrite(output_path, output_img)
 
