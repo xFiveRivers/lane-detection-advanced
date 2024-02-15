@@ -8,7 +8,6 @@ class Lines():
         self.margin = 100
         self.min_pixels = 50
         self.n_windows = 8
-        self.horiz_shift_factor = 1
         self.non_zero = None
         self.non_zero_x = None
         self.non_zero_y = None
@@ -16,6 +15,9 @@ class Lines():
         self.left_x_curr = None
         self.right_x_curr = None
         self.y_curr = None
+
+        self.left_fit = None
+        self.right_fit = None
 
         self.top_left = None
         self.bottom_right = None
@@ -25,13 +27,16 @@ class Lines():
 
     def draw_lines(self, left_x, left_y, right_x, right_y):
         
-        left_fit = np.polyfit(left_y, left_x, 2)
-        right_fit = np.polyfit(right_y, right_x, 2)
+        # Introduce short-term memory
+        if len(left_x) >= 1000:
+            self.left_fit = np.polyfit(left_y, left_x, 2)
+        if len(right_x) >= 1000:
+            self.right_fit = np.polyfit(right_y, right_x, 2)
 
         draw_x = np.linspace(0, self.img.shape[1], self.img.shape[1])
 
-        draw_y_left = np.polyval(left_fit, draw_x)
-        draw_y_right = np.polyval(right_fit, draw_x)
+        draw_y_left = np.polyval(self.left_fit, draw_x)
+        draw_y_right = np.polyval(self.right_fit, draw_x)
 
         draw_points_left = (np.asarray([draw_y_left, draw_x]).T).astype(np.int32)
         draw_points_right = (np.asarray([draw_y_right, draw_x]).T).astype(np.int32)
@@ -58,8 +63,10 @@ class Lines():
 
         # Define base location of left and right lines based on the peak
         # of the histograms to the left and right of the midpoint
-        left_x_base = np.argmax(hist[:midpoint])
-        right_x_base = np.argmax(hist[midpoint:]) + midpoint
+        # left_x_base = np.argmax(hist[:midpoint])
+        # right_x_base = np.argmax(hist[midpoint:]) + midpoint
+        left_x_base = np.argmax(hist[:500])
+        right_x_base = np.argmax(hist[800:]) + 800
 
         # Create pointers for window center coordinates
         self.left_x_curr = left_x_base
@@ -123,9 +130,9 @@ class Lines():
 
             # Update pointers
             if len(left_window_x) >= self.min_pixels:
-                self.left_x_curr = np.int32(np.mean(left_window_x) * self.horiz_shift_factor)
+                self.left_x_curr = np.int32(np.mean(left_window_x))
             if len(right_window_x) >= self.min_pixels:
-                self.right_x_curr = np.int32(np.mean(right_window_x) * self.horiz_shift_factor)
+                self.right_x_curr = np.int32(np.mean(right_window_x))
             self.y_curr -= self.window_height
 
         return self.draw_lines(left_x, left_y, right_x, right_y)
