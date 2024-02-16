@@ -3,31 +3,40 @@ import numpy as np
 
 class Threshold():
     def __init__(self):
-        pass
-
-    def apply_threshold(self, img, v_thresh, h_thresh):
         # Specify yellow threshold range
-        yellow_lower_range = np.array([0, 100, 100])
-        yellow_upper_range = np.array([50, 255, 255])
+        self.yellow_lower = np.array([0, 100, 100])
+        self.yellow_upper = np.array([50, 255, 255])
 
         # Specify white threshold range
-        white_lower_range = np.array([215])
-        white_upper_range = np.array([255])
+        self.white_lower = np.array([215])
+        self.white_upper = np.array([255])
 
         # Specify value channel threshold range
-        v_channel_lower_range = np.array([170])
-        v_channel_upper_range = np.array([255])
+        self.v_channel_lower = np.array([170])
+        self.v_channel_upper = np.array([255]) 
 
+        self.s_channel_lower = np.array([200])
+        self.s_channel_upper = np.array([255]) 
+        
+        self.gray_thresh = 125     
+
+    def apply_threshold(self, img, v_thresh, h_thresh):
+        
         # Get colour spaces
+        hls = cv2.cvtColor(img, cv2.BGR2HLS)
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Apply colour-specific thresholding
-        yellow = cv2.inRange(hsv, yellow_lower_range, yellow_upper_range)
-        white = cv2.inRange(gray, white_lower_range, white_upper_range)
-        value = cv2.inRange(hsv[:, :, 2], v_channel_lower_range, v_channel_upper_range)
+        yellow = cv2.inRange(hsv, self.yellow_lower_range, self.yellow_upper_range)
+        white = cv2.inRange(gray, self.white_lower_range, self.white_upper_range)
+
+        if np.mean(gray) <= self.gray_thresh:
+            relative = cv2.inRange(hsv[:, :, 2], self.v_channel_lower_range, self.v_channel_upper_range)
+        else:
+            relative = cv2.inRange(hls[:, :, 2], self.s_channel_lower, self.s_channel_upper)
         
-        output = yellow | white | value
+        output = yellow | white | relative
 
         # h_channel = hsv[:, :, 0]
         # v_channel = hsv[:, :, 2]
