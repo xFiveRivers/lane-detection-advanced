@@ -1,0 +1,8 @@
+Learned:
+Colour Spaces
+
+Improved:
+
+Explored:
+Otsu's Thresholding
+Adaptive Gaussian Thresholding
