@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from moviepy.editor import VideoFileClip
+# from moviepy.editor import VideoFileClip
 
 from src.calibration import *
 from src.transform import *
@@ -47,8 +47,8 @@ class LaneDetection:
                 out.write(processed_frame)
 
                 if debug == True:
-                    cv2.imwrite(f'output_media/debug/problem_frames/{i}_frame.png', frame)
-                    cv2.imwrite(f'output_media/debug/problem_frames/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
+                    cv2.imwrite(f'output_media/debug/output_frames/solo/{i}_frame.png', frame)
+                    cv2.imwrite(f'output_media/debug/output_frames/side-by-side/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
 
                 i += 1           
                 if cv2.waitKey(1) & 0xFF == ord('q'):
