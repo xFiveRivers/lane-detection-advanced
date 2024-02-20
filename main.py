@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import os
+import shutil
 # from moviepy.editor import VideoFileClip
 
 from src.calibration import *
@@ -37,6 +39,16 @@ class LaneDetection:
         if cap.isOpened() == False:
             return 'Error openeing video.'
         
+        if debug == True:
+            solo_path = 'output_media/debug/output_frames/solo'
+            sbs_path = 'output_media/debug/output_frames/side-by-side'
+
+            shutil.rmtree(solo_path)
+            shutil.rmtree(sbs_path)
+
+            os.mkdir(solo_path)
+            os.mkdir(sbs_path)
+            
         i = 0
 
         while(cap.isOpened()):
@@ -47,8 +59,8 @@ class LaneDetection:
                 out.write(processed_frame)
 
                 if debug == True:
-                    cv2.imwrite(f'output_media/debug/output_frames/solo/{i}_frame.png', frame)
-                    cv2.imwrite(f'output_media/debug/output_frames/side-by-side/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
+                    cv2.imwrite(f'{solo_path}/{i}_frame.png', frame)
+                    cv2.imwrite(f'{sbs_path}/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
 
                 i += 1           
                 if cv2.waitKey(1) & 0xFF == ord('q'):
