@@ -26,7 +26,7 @@ class Threshold():
         hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
 
         # Define upper and lower hue, lightness, and saturation values for white lines
-        white_lower = np.array([int(0 / 2), int(0.75 * 255), int(0.00 * 255)])
+        white_lower = np.array([int(0 / 2), int(0.78 * 255), int(0.00 * 255)])
         white_upper = np.array([int(360 / 2), int(1.00* 255), int(1.00 * 255)])
 
         # Find white pixels for left and right lanes
