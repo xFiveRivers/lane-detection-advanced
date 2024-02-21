@@ -35,16 +35,16 @@ class Threshold():
         # # Find white pixels for left and right lanes
         # white = cv2.inRange(hls, white_lower, white_upper)
 
-        # lightness_lower = np.array([178])
-        # lightness_upper = np.array([255])
-        # lightness = cv2.inRange(hls[:, :, 1], lightness_lower, lightness_upper)
+        lightness_lower = np.array([195])
+        lightness_upper = np.array([255])
+        lightness = cv2.inRange(hls[:, :, 1], lightness_lower, lightness_upper)
 
-        if np.mean(hls[:, 400:820, 1]) >= 132:
-            white_lower = np.array([int(0 / 2), int(0.66 * 255), int(0.00 * 255)])
-        else:
-            white_lower = np.array([int(0 / 2), int(0.67 * 255), int(0.40 * 255)])
-        white_upper = np.array([int(60 / 2), int(1.00 * 255), int(1.00 * 255)])
-        relative = cv2.inRange(hls, white_lower, white_upper)
+        # if np.mean(hls[:, 400:820, 1]) >= 132:
+        #     white_lower = np.array([int(0 / 2), int(0.66 * 255), int(0.00 * 255)])
+        # else:
+        #     white_lower = np.array([int(0 / 2), int(0.67 * 255), int(0.40 * 255)])
+        # white_upper = np.array([int(60 / 2), int(1.00 * 255), int(1.00 * 255)])
+        # relative = cv2.inRange(hls, white_lower, white_upper)
 
         # Define upper and lower hue, lightness, and saturation values for yellow lines
         yellow_lower = np.array([int(40 / 2), int(0.20 * 255), int(0.20 * 255)])
@@ -52,7 +52,7 @@ class Threshold():
 
         yellow = cv2.inRange(hls, yellow_lower, yellow_upper)
 
-        output = relative | yellow
+        output = lightness | yellow
         
         # # Get colour spaces
         # hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
