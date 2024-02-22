@@ -1,9 +1,10 @@
 Learned:
 Colour Spaces (HSV, HLS, LAB)
+Dimunation
 
 Improved:
 Matplotlib
-
+Git
 
 Explored:
 Otsu's Thresholding
