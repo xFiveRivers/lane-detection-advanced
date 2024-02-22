@@ -1,7 +1,9 @@
 Learned:
-Colour Spaces
+Colour Spaces (HSV, HLS, LAB)
 
 Improved:
+Matplotlib
+
 
 Explored:
 Otsu's Thresholding
