@@ -6,8 +6,8 @@ class Lines():
     def __init__(self):
         self.img = None
         self.margin = 150
-        self.min_pixels = 50
-        self.n_windows = 7
+        self.min_pixels = 25
+        self.n_windows = 9
         self.non_zero = None
         self.non_zero_x = None
         self.non_zero_y = None
@@ -55,8 +55,9 @@ class Lines():
         self.window_height = int(self.img.shape[0] // self.n_windows)
 
         # Create historgram
-        y_cutoff = int(self.img.shape[0] * (1 - (1 / 3)))
-        hist = np.sum(self.img[y_cutoff:, :], axis=0)
+        # y_cutoff = int(self.img.shape[0] * (1 - (1 / 3)))
+        # hist = np.sum(self.img[y_cutoff:, :], axis=0)
+        hist = np.sum(self.img, axis=0)
 
         # Define midpoint of historgram
         midpoint = int(hist.shape[0] / 2)
@@ -65,8 +66,8 @@ class Lines():
         # of the histograms to the left and right of the midpoint
         # left_x_base = np.argmax(hist[:midpoint])
         # right_x_base = np.argmax(hist[midpoint:]) + midpoint
-        left_x_base = np.argmax(hist[:500])
-        right_x_base = np.argmax(hist[800:]) + 800
+        left_x_base = np.argmax(hist[:600])
+        right_x_base = np.argmax(hist[800:1200]) + 800
 
         # Create pointers for window center coordinates
         self.left_x_curr = left_x_base

@@ -24,6 +24,7 @@ class Threshold():
 
         # Get HLS Colour Space
         hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         # Define upper and lower hue, lightness, and saturation values for white lines
         # if np.mean(hls[:, :, 1]) >= 132:
@@ -47,10 +48,13 @@ class Threshold():
         # relative = cv2.inRange(hls, white_lower, white_upper)
 
         # Define upper and lower hue, lightness, and saturation values for yellow lines
-        yellow_lower = np.array([int(40 / 2), int(0.20 * 255), int(0.20 * 255)])
-        yellow_upper = np.array([int(60 / 2), int(1.00* 255), int(1.00 * 255)])
+        # yellow_lower = np.array([int(40 / 2), int(0.20 * 255), int(0.20 * 255)])
+        # yellow_upper = np.array([int(60 / 2), int(1.00* 255), int(1.00 * 255)])
+        # yellow = cv2.inRange(hls, yellow_lower, yellow_upper)
 
-        yellow = cv2.inRange(hls, yellow_lower, yellow_upper)
+        yellow_lower = np.array([int(40 / 2), int(0.00 * 255), int(0.00 * 255)])
+        yellow_upper = np.array([int(50 / 2), int(1.00 * 255), int(1.00* 255)])
+        yellow = cv2.inRange(hsv, yellow_lower, yellow_upper)
 
         output = lightness | yellow
         
