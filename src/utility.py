@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from src.calibration import *
+from src.transform import *
 
 def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
     """Draws the boundry of a region of interest on the image
@@ -22,6 +24,7 @@ def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
     result : array_like
         The original image with the drawn ROI boundries
     """
+    
     for point in points:
         for x, y in point:
             cv2.circle(img, (x, y), radius = 10, color = color, thickness = -1)
@@ -48,6 +51,7 @@ def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, nc
     figsize : tuple, optional
         Figure size in inches, by default (12, 3)
     """
+
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
 
     if ncols > 1:
@@ -60,3 +64,37 @@ def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, nc
         axs.imshow(list(dict.values())[0], cmap=cmap)
     fig.suptitle(title)
     plt.show()
+
+def get_bev(src_path: str):
+    """Returns a list of bird's-eye-view of front-view frames.
+
+    Parameters
+    ----------
+    src_path : str
+        Path to the folder containing the frames. 
+
+    Returns
+    -------
+    list
+        A list containing the trasnformed images.
+    """
+
+    # Initialize classes
+    calibration = Calibration('camera_cal', (9, 6))
+    transform = Transform()
+
+    # Initialize variables
+    bev_list = []
+
+    # Get file names
+    fnames = glob("{}/*".format(src_path))
+
+    # Loop through files, apply calibration, and transform
+    for file in fnames:
+        img = cv2.imread(file)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Calibration.undistort(img)
+        img = Transform.orig_to_bev(img)
+        bev_list.append(img)
+
+    return bev_list
