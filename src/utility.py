@@ -30,7 +30,7 @@ def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
 
     return result
 
-def plot_channels(dict: dict, title: str, nrows: int = 1, ncols: int = 3, figsize: tuple = (12, 3)):
+def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, ncols: int = 3, figsize: tuple = (12, 3)):
     """Plots the colour channels of a given colour space.
 
     Parameters
@@ -39,6 +39,8 @@ def plot_channels(dict: dict, title: str, nrows: int = 1, ncols: int = 3, figsiz
         A dictionary containing channel titles (keys) and arrays (values).
     title : str
         The title to display on the plot.
+    cmap : str
+        The colourmap as per matplotlib's standard.
     nrows : int, optional
         Number of rows in the plot, by default 1.
     ncols : int, optional
@@ -49,7 +51,7 @@ def plot_channels(dict: dict, title: str, nrows: int = 1, ncols: int = 3, figsiz
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     axs = axs.flatten()
     for channel, ax in zip(dict, axs):
-        ax.imshow(dict[channel], cmap='gray')
+        ax.imshow(dict[channel], cmap=cmap)
         ax.title.set_text(channel)
         ax.axis(False)
     fig.suptitle(title)
