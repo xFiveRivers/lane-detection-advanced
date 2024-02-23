@@ -49,10 +49,14 @@ def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, nc
         Figure size in inches, by default (12, 3)
     """
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
-    axs = axs.flatten()
-    for channel, ax in zip(dict, axs):
-        ax.imshow(dict[channel], cmap=cmap)
-        ax.title.set_text(channel)
-        ax.axis(False)
+
+    if ncols > 1:
+        axs = axs.flatten()
+        for channel, ax in zip(dict, axs):
+            ax.imshow(dict[channel], cmap=cmap)
+            ax.title.set_text(channel)
+            ax.axis(False)
+    else:
+        axs.imshow(list(dict.values())[0], cmap=cmap)
     fig.suptitle(title)
     plt.show()
