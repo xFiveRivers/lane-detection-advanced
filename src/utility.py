@@ -107,8 +107,15 @@ def plot_row_images(img_list: list, title_list: list, cmap: str = None):
     fig, axs = plt.subplots(nrows=1, ncols=len(img_list), figsize=(12,6))
     
     for i, img, in enumerate(img_list):
-        axs[i].imshow(img_list[i])
+        axs[i].imshow(img_list[i], cmap=cmap)
         axs[i].axis('off')
         axs[i].title.set_text(title_list[i])
     
     plt.show()
+
+
+def binary_threshold(img, thresh):
+    binary = np.zeros_like(img)
+    binary[img < thresh] = 0
+    binary[img >= thresh] = 1
+    return binary
