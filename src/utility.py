@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from src.calibration import *
 from src.transform import *
 
+
 def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
     """Draws the boundry of a region of interest on the image
 
@@ -24,7 +25,7 @@ def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
     result : array_like
         The original image with the drawn ROI boundries
     """
-    
+
     for point in points:
         for x, y in point:
             cv2.circle(img, (x, y), radius = 10, color = color, thickness = -1)
@@ -32,6 +33,7 @@ def draw_roi(img: np.ndarray, points: np.ndarray, color: tuple = (255, 0, 0)):
     result = cv2.polylines(img, points, True, color, thickness=5)
 
     return result
+
 
 def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, ncols: int = 3, figsize: tuple = (12, 3)):
     """Plots the colour channels of a given colour space.
@@ -65,6 +67,7 @@ def plot_channels(dict: dict, title: str, cmap: str = 'gray', nrows: int = 1, nc
     fig.suptitle(title)
     plt.show()
 
+
 def get_bev(src_path: str):
     """Returns a list of bird's-eye-view of front-view frames.
 
@@ -93,8 +96,19 @@ def get_bev(src_path: str):
     for file in fnames:
         img = cv2.imread(file)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = Calibration.undistort(img)
-        img = Transform.orig_to_bev(img)
+        img = calibration.undistort(img)
+        img = transform.orig_to_bev(img)
         bev_list.append(img)
 
     return bev_list
+
+
+def plot_row_images(img_list: list, title_list: list, cmap: str = None):
+    fig, axs = plt.subplots(nrows=1, ncols=len(img_list), figsize=(12,6))
+    
+    for i, img, in enumerate(img_list):
+        axs[i].imshow(img_list[i])
+        axs[i].axis('off')
+        axs[i].title.set_text(title_list[i])
+    
+    plt.show()
