@@ -54,14 +54,13 @@ class LaneDetection:
             ret, frame = cap.read()
             if ret == True:
                 processed_frame = self.detect(frame, draw_boxes)
-                # print(i)
                 out.write(processed_frame)
 
                 if debug == True:
                     cv2.imwrite(f'{solo_path}/{i}_frame.png', frame)
                     cv2.imwrite(f'{sbs_path}/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
-
                 i += 1           
+                
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
@@ -76,4 +75,3 @@ class LaneDetection:
         input_img = cv2.imread(input_path)
         output_img = self.detect(input_img, draw_boxes)
         cv2.imwrite(output_path, output_img)
-
