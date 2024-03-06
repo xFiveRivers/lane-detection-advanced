@@ -102,7 +102,7 @@ class LaneDetection:
             os.mkdir(solo_path)
             os.mkdir(sbs_path)
             
-            # Frame counter
+            # Initialize frame counter
             i = 0
 
         # Loop through video frame by frame
