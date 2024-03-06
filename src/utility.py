@@ -104,18 +104,52 @@ def get_bev(src_path: str):
 
 
 def plot_row_images(img_list: list, title_list: list, cmap: str = None):
+    """Plots a single row of images.
+
+    Parameters
+    ----------
+    img_list : list
+        List of images to plot.
+    title_list : list
+        List of subtitles for each image.
+    cmap : str, optional
+        Keyword argument for matplotlib image rendering, by default None.
+    """
+
+    # Create figure with subplots
     fig, axs = plt.subplots(nrows=1, ncols=len(img_list), figsize=(12,6))
     
+    # Show image in each subplot
     for i, img, in enumerate(img_list):
         axs[i].imshow(img_list[i], cmap=cmap)
         axs[i].axis('off')
         axs[i].title.set_text(title_list[i])
     
+    # Show figure
     plt.show()
 
 
-def binary_threshold(img, thresh):
+def binary_threshold(img, thresh: int):
+    """Performs binary thresholding on a grayscale image.
+
+    Parameters
+    ----------
+    img : array-like
+        Grayscale image to threshold.
+    thresh : int
+        Grayscale threshold value.
+
+    Returns
+    -------
+    binary : array-like
+        Binary image from grayscale thresholding.
+    """
+
+    # Create black image 
     binary = np.zeros_like(img)
+
+    # Threshold pixels
     binary[img < thresh] = 0
     binary[img >= thresh] = 1
+
     return binary
