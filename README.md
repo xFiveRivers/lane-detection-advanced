@@ -1,5 +1,27 @@
 # **Lane Detection**
 
+**Author:** [Vikram Grewal](https://github.com/xFiveRivers)
+
+## **Summary**
+
+This repo is a personal project to explore autonomous vehicles through lane detection with computer vision techniques. It also contains sequencial `jupyter` notebooks in which I describe the background and motivation to each step in the pipeline.
+
+My intention was to create a tutorial of sorts for myself, mostly so that I could easily review the motivation and code behind each decision. It's also a good way of clearly showing what is being done without having to decipher scripts.
+
+## **Data**
+
+All test and calibration data has been sourced from `Udacity's` Advanced Lane Lines [repository](https://github.com/udacity/CarND-Advanced-Lane-Lines).
+
+## **Installation**
+
+All of the packages required to run the pipeline are included in the `envrionment.yaml` file. To install, navigate to the root folder and run the following command:
+
+`conda env create -f environment.yml`
+
+## **Running the Pipeline**
+
+
+
 ## **Motivation**
 
 With the modern reliance of cars, driving has become something akin to second nature for many people. Yet the sheer complexity of driving is outstanding. Think about how many calculations you are performing when you drive. If there is a hill coming up, you know to shift into a lower gear for extra torque. If you are approaching a school zone, you know to drive slower and be more cautious. When a sharp corner is approaching, you know what a good braking point is. The point here is that **you** are in control of the vehicle and it is **you** who is making the decisions of where and how to move the vehicle.
@@ -15,4 +37,3 @@ So why lane detection? Of all the angles to approach autonomous vehicles, lane d
 The project focuses solely on developing a **computer vision algorithm** to detect the lane lines in a given test run. As compared to a simple method such as `Canny Edge Detection`, I wanted to try using a more complex solution that includes `perspective transformation` to bird's-eye view, colour spaces for `image thresholding`, and a `sliding window` algorithm to fit a second-degree polynomial for each lane line. The idea is to develop a solution that is more robust to varying road conditions as compared to more naive solutions.
 
 Though, increasing robustness and generalization is no easy task with computer vision alone. Even sophisticated algorithms will need heavy calibrations to account for varying road conditions. The best algorithms right now, however, use deep learning algorithms and data that include high degrees of road condition variability.
-
