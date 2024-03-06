@@ -2,7 +2,14 @@ import cv2
 import numpy as np
 
 class Threshold():
+
     def __init__(self):
+        """Class used to run pipeline.
+
+        Attributes
+        ----------
+        
+        """
         # Specify yellow threshold range
         self.yellow_lower = np.array([0, 100, 100])
         self.yellow_upper = np.array([50, 255, 255])
@@ -20,7 +27,7 @@ class Threshold():
         
         self.gray_thresh = 150  
 
-    def apply_threshold(self, img, v_thresh, h_thresh):
+    def apply_threshold(self, img):
 
         # Get HLS Colour Space
         hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
