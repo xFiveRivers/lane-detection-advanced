@@ -35,13 +35,13 @@ class Threshold():
 
         Parameters
         ----------
-        img : _type_
-            _description_
+        img : array-like
+            Source bird's-eye view image.
 
         Returns
         -------
-        _type_
-            _description_
+        output : array-like
+            Output binary image containing thresholded pixels.
         """
 
         # Get colourspaces
