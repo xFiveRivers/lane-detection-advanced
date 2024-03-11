@@ -4,30 +4,93 @@ import numpy as np
 class Lines():
 
     def __init__(self):
+        """Class used to detect the lane lines in an image
+
+        Attributes
+        ----------
+        img : array-like
+            Source image.
+        out_img : array-like
+            Ouput image of fitted lines.
+        non_zero : array-like
+            Matrix of x and y coordinates of non-zero pixels.
+        non_zero_x : array-like
+            Array containing x-coordinates of non-zero pixels.
+        non_zero_y : array-like
+            Array containing y-coordinates of non-zero pixels.
+        left_x_curr : int
+            Pointer for left window center x-coordinate.
+        right_x_curr : int
+            Pointer for right window center x-coordinate.
+        y_curr : int
+            Point for window center y-coordinate.
+        window_height : int
+            Window height in pixels.
+        top_left : tuple
+            Tuple for window top-left corner pointer x and y coordinates.
+        bottom_right : tuple
+            Tuple for window bottom-right corner pointer x and y coordinates.
+        left_fit : array-like
+            Left line 2nd order polynomial coefficients.
+        right_fit : array-like
+            Right line 2nd order polynomial coefficients.
+        margin : int
+            One half of total window width.
+        min_pixels : int
+            Minimum number of pixels in window to update x_curr pointer.
+        n_windows : int
+            Total number of windows.
+        """
+
+        # Images
         self.img = None
-        self.margin = 150
-        self.min_pixels = 25
-        self.n_windows = 9
+        self.out_img = None
+
+        # Non-zero matrices
         self.non_zero = None
         self.non_zero_x = None
         self.non_zero_y = None
-        self.window_height = None
+
+        # Window center pointers
         self.left_x_curr = None
         self.right_x_curr = None
         self.y_curr = None
 
+        # Window parameters
+        self.window_height = None
+        self.top_left = None
+        self.bottom_right = None
+        
+        # Fitted Lines
         self.left_fit = None
         self.right_fit = None
 
-        self.top_left = None
-        self.bottom_right = None
-        self.out_img = None
-
+        # Hyperparameters
+        self.margin = 150
+        self.min_pixels = 25
+        self.n_windows = 9
 
 
     def draw_lines(self, left_x, left_y, right_x, right_y):
-        
-        # Introduce short-term memory
+        """_summary_
+
+        Parameters
+        ----------
+        left_x : array-like
+            X-coordinates of all detected pixels for the left line.
+        left_y : array-like
+            Y-coordinates of all detected pixels for the left line.
+        right_x : array-like
+            X-coordinates of all detected pixels for the right line.
+        right_y : array-like
+            Y-coordinates of all detected pixels for the right line.
+
+        Returns
+        -------
+        array-like
+            Output image of fitted lines.
+        """
+
         if len(left_x) >= 1000:
             self.left_fit = np.polyfit(left_y, left_x, 2)
         if len(right_x) >= 1000:
@@ -50,22 +113,15 @@ class Lines():
 
 
     def get_features(self):
+        """Initializes parameters for aliding window."""
 
         # Get height of windows
         self.window_height = int(self.img.shape[0] // self.n_windows)
 
         # Create historgram
-        # y_cutoff = int(self.img.shape[0] * (1 - (1 / 3)))
-        # hist = np.sum(self.img[y_cutoff:, :], axis=0)
         hist = np.sum(self.img, axis=0)
 
-        # Define midpoint of historgram
-        midpoint = int(hist.shape[0] / 2)
-
-        # Define base location of left and right lines based on the peak
-        # of the histograms to the left and right of the midpoint
-        # left_x_base = np.argmax(hist[:midpoint])
-        # right_x_base = np.argmax(hist[midpoint:]) + midpoint
+        # Define starting x-coordinates of left and right windows
         left_x_base = np.argmax(hist[:600])
         right_x_base = np.argmax(hist[800:1200]) + 800
 
@@ -81,7 +137,21 @@ class Lines():
 
 
     def find_pixels(self, center):
-    
+        """Finds coordinates of pixels within the window.
+
+        Parameters
+        ----------
+        center : tuple
+            X and y coordinates for the center of the window.
+
+        Returns
+        -------
+        targets_x : array-like
+            X-coordinates of detected pixels in window.
+        target_y : array-like
+            Y-coordinates of detected pixels in window.
+
+        """
         # Define top-left and bottom-right x and y coords for window boundry
         self.top_left = (center[0] - self.margin, center[1] - (self.window_height // 2))
         self.bottom_right = (center[0] + self.margin, center[1] + self.window_height // 2)
@@ -98,7 +168,20 @@ class Lines():
     
 
     def sliding_window(self, img, draw_boxes=False):
+        """Performs sliding window algorithm.
 
+        Parameters
+        ----------
+        img : array-like
+            Source threshold image.
+        draw_boxes : bool, optional
+            Flag for drawing windows, by default False.
+
+        Returns
+        -------
+        out_img : array-like
+            Output image of fitted lines.
+        """
         self.img = img
         self.out_img = np.zeros((self.img.shape[0], self.img.shape[1], 3))
 

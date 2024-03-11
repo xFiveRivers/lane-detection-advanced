@@ -1,77 +1,33 @@
-import cv2
-import numpy as np
-import os
-import shutil
+"""
+Lane Detection Pipeline
 
-from src.calibration import *
-from src.transform import *
-from src.threshold import *
-from src.lines import *
+Usage:
+    python main.py <media> <input_path> <output_path>
 
-class LaneDetection:
-
-    def __init__(self, draw_boxes=False):
-        self.calibration = Calibration('camera_cal', (9, 6))
-        self.tranform = Transform()
-        self.threshold = Threshold()
-        self.lines = Lines()
-
-    def detect(self, img, draw_boxes):
-        orig_img = np.copy(img)
-        img = self.calibration.undistort(img)
-        img = self.tranform.orig_to_bev(img)
-        img = self.threshold.apply_threshold(img, (210, 255), (20, 30))
-        img = self.lines.sliding_window(img, draw_boxes)
-        img = self.tranform.bev_to_orig(img)
-        out_img = cv2.addWeighted(orig_img, 0.8, img, 1.0, 0.0)
-
-        return out_img
-    
-    def process_video(self, input_path, output_path, debug=False, draw_boxes=False):
-        cap = cv2.VideoCapture(input_path)
-
-        frame_width = int(cap.get(3))
-        frame_height = int(cap.get(4)) 
-
-        out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MJPG"), 24, (frame_width, frame_height))
-
-        if cap.isOpened() == False:
-            return 'Error openeing video.'
-        
-        if debug == True:
-            solo_path = 'output_media/debug/output_frames/solo'
-            sbs_path = 'output_media/debug/output_frames/side-by-side'
-
-            shutil.rmtree(solo_path)
-            shutil.rmtree(sbs_path)
-
-            os.mkdir(solo_path)
-            os.mkdir(sbs_path)
-            
-        i = 0
-
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret == True:
-                processed_frame = self.detect(frame, draw_boxes)
-                out.write(processed_frame)
-
-                if debug == True:
-                    cv2.imwrite(f'{solo_path}/{i}_frame.png', frame)
-                    cv2.imwrite(f'{sbs_path}/{i}_side-by-side.png', np.concatenate((frame, processed_frame), axis=1))
-                i += 1           
-                
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-            else:
-                break
-
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
+Options:
+    -h --help           Show help screen.
+    <media>             Flag to process image or video.
+    <input_path>        Path from root to input media.
+    <output_path>       Path from root to output media.
+"""
 
 
-    def process_image(self, input_path, output_path, draw_boxes=False):
-        input_img = cv2.imread(input_path)
-        output_img = self.detect(input_img, draw_boxes)
-        cv2.imwrite(output_path, output_img)
+from docopt import docopt
+from method import *
+
+
+def main():
+    args = docopt(__doc__)
+
+    lanedetection = LaneDetection()
+
+    if args['<media>'] == 'image':
+        lanedetection.process_image(args['<input_path>'], args['<output_path>'])
+    elif args['<media>'] == 'video':
+        lanedetection.process_video(args['<input_path>'], args['<output_path>'])
+    else:
+        print('Please specify either image or video for your media choice.')
+
+
+if __name__ == '__main__':
+    main()

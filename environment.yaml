@@ -6,6 +6,7 @@ channels:
   - defaults
 dependencies:
   - ipykernel
+  - jupyter
   - matplotlib
   - numpy
   - pip
@@ -13,3 +14,4 @@ dependencies:
   - tqdm
   - pip:
       - opencv-python
+      - docopt

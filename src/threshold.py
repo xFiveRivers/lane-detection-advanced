@@ -8,88 +8,51 @@ class Threshold():
 
         Attributes
         ----------
-        
+        lightness_lower: array-like
+            The lower bound of the lightness threshold range
+        lightness_upper: array-like
+            The upper bound of the lightness threshold range
+        yellow_lower: array-like
+            The lower bound of the HSV colour space
+        yellow_upper: array-like
+            The upper bound of the HSV colour space
         """
-        # Specify yellow threshold range
-        self.yellow_lower = np.array([0, 100, 100])
-        self.yellow_upper = np.array([50, 255, 255])
 
-        # Specify white threshold range
-        self.white_lower = np.array([215])
-        self.white_upper = np.array([255])
+        # Define upper and lower bounds of lightness range
+        self.lightness_lower = np.array([195])
+        self.lightness_upper = np.array([255])
 
-        # Specify value channel threshold range
-        self.v_channel_lower = np.array([170])
-        self.v_channel_upper = np.array([255]) 
-
-        self.s_channel_lower = np.array([200])
-        self.s_channel_upper = np.array([255]) 
+        # Define upper and lower bounds of HSV space
+        self.yellow_lower = np.array([int(40 / 2), int(0.00 * 255), int(0.00 * 255)])
+        self.yellow_upper = np.array([int(50 / 2), int(1.00 * 255), int(1.00* 255)])
         
-        self.gray_thresh = 150  
 
     def apply_threshold(self, img):
+        """Applies thresholding to an image for line detection.
 
-        # Get HLS Colour Space
+        Thresholds the lightness channel of the HLS colour space for white lines
+        and thresholds the HSV colour space for yellow lines.
+
+        Parameters
+        ----------
+        img : array-like
+            Source bird's-eye view image.
+
+        Returns
+        -------
+        output : array-like
+            Output binary image containing thresholded pixels.
+        """
+
+        # Get colourspaces
         hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        # Define upper and lower hue, lightness, and saturation values for white lines
-        # if np.mean(hls[:, :, 1]) >= 132:
-        #     white_lower = np.array([int(0 / 2), int(0.78 * 255), int(0.00 * 255)])
-        # else:
-        #     white_lower = np.array([int(0 / 2), int(0.70 * 255), int(0.00 * 255)])
-        # white_upper = np.array([int(360 / 2), int(1.00* 255), int(1.00 * 255)])
+        # Get filtered images
+        lightness = cv2.inRange(hls[:, :, 1], self.lightness_lower, self.lightness_upper)
+        yellow = cv2.inRange(hsv, self.yellow_lower, self.yellow_upper)
 
-        # # Find white pixels for left and right lanes
-        # white = cv2.inRange(hls, white_lower, white_upper)
-
-        lightness_lower = np.array([195])
-        lightness_upper = np.array([255])
-        lightness = cv2.inRange(hls[:, :, 1], lightness_lower, lightness_upper)
-
-        # if np.mean(hls[:, 400:820, 1]) >= 132:
-        #     white_lower = np.array([int(0 / 2), int(0.66 * 255), int(0.00 * 255)])
-        # else:
-        #     white_lower = np.array([int(0 / 2), int(0.67 * 255), int(0.40 * 255)])
-        # white_upper = np.array([int(60 / 2), int(1.00 * 255), int(1.00 * 255)])
-        # relative = cv2.inRange(hls, white_lower, white_upper)
-
-        # Define upper and lower hue, lightness, and saturation values for yellow lines
-        # yellow_lower = np.array([int(40 / 2), int(0.20 * 255), int(0.20 * 255)])
-        # yellow_upper = np.array([int(60 / 2), int(1.00* 255), int(1.00 * 255)])
-        # yellow = cv2.inRange(hls, yellow_lower, yellow_upper)
-
-        yellow_lower = np.array([int(40 / 2), int(0.00 * 255), int(0.00 * 255)])
-        yellow_upper = np.array([int(50 / 2), int(1.00 * 255), int(1.00* 255)])
-        yellow = cv2.inRange(hsv, yellow_lower, yellow_upper)
-
+        # Combine filtered images
         output = lightness | yellow
-        
-        # # Get colour spaces
-        # hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
-        # hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        # # Apply colour-specific thresholding
-        # yellow = cv2.inRange(hsv, self.yellow_lower, self.yellow_upper)
-        # white = cv2.inRange(gray, self.white_lower, self.white_upper)
-
-        # if np.mean(gray) <= self.gray_thresh:
-        #     relative = cv2.inRange(hsv[:, :, 2], self.v_channel_lower, self.v_channel_upper)
-        # else:
-        #     relative = cv2.inRange(hls[:, :, 2], self.s_channel_lower, self.s_channel_upper)
-        
-        # output = yellow | white | relative
-
-        # h_channel = hsv[:, :, 0]
-        # v_channel = hsv[:, :, 2]
-
-        # h_img = np.zeros_like(h_channel)
-        # h_img[(h_channel >= h_thresh[0]) & (h_channel <= h_thresh[1])] = 1
-
-        # v_img = np.zeros_like(v_channel)
-        # v_img[(v_channel >= v_thresh[0]) & (v_channel <= v_thresh[1])] = 1
-
-        # output = v_img | h_img
 
         return output
