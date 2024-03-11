@@ -51,7 +51,7 @@ class LaneDetection:
         orig_img = np.copy(img)
         img = self.calibration.undistort(img)
         img = self.tranform.orig_to_bev(img)
-        img = self.threshold.apply_threshold(img, (210, 255), (20, 30))
+        img = self.threshold.apply_threshold(img)
         img = self.lines.sliding_window(img, draw_boxes)
         img = self.tranform.bev_to_orig(img)
         out_img = cv2.addWeighted(orig_img, 0.8, img, 1.0, 0.0)
