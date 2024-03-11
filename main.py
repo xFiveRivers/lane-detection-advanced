@@ -12,22 +12,22 @@ Options:
 """
 
 
-import docopt
-opt = docopt(__doc__)
-             
+from docopt import docopt
 from method import *
 
 
-def main(media, input_path, output_path):
+def main():
+    args = docopt(__doc__)
+
     lanedetection = LaneDetection()
 
-    if media == 'image':
-        lanedetection.process_image(input_path, output_path)
-    elif media == 'video':
-        lanedetection.process_video(input_path, output_path)
+    if args['<media>'] == 'image':
+        lanedetection.process_image(args['<input_path>'], args['<output_path>'])
+    elif args['<media>'] == 'video':
+        lanedetection.process_video(args['<input_path>'], args['<output_path>'])
     else:
         print('Please specify either image or video for your media choice.')
 
 
 if __name__ == '__main__':
-    main(opt['<media>'], opt['<input_path>'], opt['<output_path>'])
+    main()
