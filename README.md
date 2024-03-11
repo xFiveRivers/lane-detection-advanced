@@ -6,7 +6,7 @@ This repo is a personal project to explore autonomous vehicle concepts by creati
 
 > **Note:** The windows from the line-fitting algorithm are only shown here for conceptual purposes.
 
-
+![Output Gif](book_images/project_video.gif)
 
 First we apply `camera distortion correction` to correct the image proportions. Then a `perspective transformation` is applied to the front-view image to create a top-down view of the lane ahead of the vehicle. `Thresholding` is then applied to separate the hot-pixels of the lane lines from the rest of the image. Finally, a `sliding-window` algorithm is applied to calculate a second-degree polynomial to fit the left and right lane lines.
 
