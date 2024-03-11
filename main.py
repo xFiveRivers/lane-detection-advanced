@@ -2,7 +2,7 @@
 Lane Detection Pipeline
 
 Usage:
-    main.py <media> <input_path> <output_path>
+    python main.py <media> <input_path> <output_path>
 
 Options:
     -h --help           Show help screen.
