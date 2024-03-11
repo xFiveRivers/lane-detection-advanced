@@ -4,9 +4,7 @@
 
 ## **Summary**
 
-This repo is a personal project to explore autonomous vehicles through lane detection with computer vision techniques. It also contains sequencial `jupyter` notebooks in which I describe the background and motivation to each step in the pipeline.
-
-My intention was to create a tutorial of sorts for myself, mostly so that I could easily review the motivation and code behind each decision. It's also a good way of clearly showing what is being done without having to decipher scripts.
+This repo is a personal project to explore autonomous vehicles through **lane detection with computer vision techniques**. It also contains sequential `jupyter` notebooks in which I describe the background and motivation to each step in the pipeline. My intention was to create a tutorial of sorts for myself, mostly so to easily review the motivation and code behind each method. It's also a good way of visually showing each step in the pipeline without having to decipher scripts.
 
 ## **Data**
 
@@ -16,11 +14,19 @@ All test and calibration data has been sourced from `Udacity's` Advanced Lane Li
 
 All of the packages required to run the pipeline are included in the `envrionment.yaml` file. To install, navigate to the root folder and run the following command:
 
-`conda env create -f environment.yml`
+```conda env create -f environment.yml```
 
-## **Running the Pipeline**
+## **Usage**
 
+The pipeline uses `docopt` to run the script through CLI and can be run using the following command in the root folder:
 
+```python main.py <media> <input_path> <output_path>```
+
+Where `<media>` specifies the type of media to process as a **string**, `<input_path>` specifies the path to the source file, and `<out_path>` specifes the path to write the processed file to. As an example:
+
+```python main.py 'image' 'test_images/test1.jpg' 'output_media/test1.jpg'```
+
+> **Note:** Video files must be saved as `.avi` files.
 
 ## **Motivation**
 
