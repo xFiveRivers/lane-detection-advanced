@@ -86,7 +86,7 @@ class LaneDetection:
         # Check if video can be opened
         if cap.isOpened() == False:
             return 'Error openeing video.'
-        
+
         # Initialize debug parameters
         if debug == True:
             # Path for individual frames
@@ -104,6 +104,8 @@ class LaneDetection:
             
             # Initialize frame counter
             i = 0
+
+        print('Processing video...')
 
         # Loop through video frame by frame
         while(cap.isOpened()):
@@ -134,6 +136,8 @@ class LaneDetection:
         out.release()
         cv2.destroyAllWindows()
 
+        print(f'Processed video saved to {output_path}')
+
 
     def process_image(self, input_path: str, output_path: str, draw_boxes=False):
         """Detect lane lines for an image.
@@ -151,8 +155,12 @@ class LaneDetection:
         # Read image
         input_img = cv2.imread(input_path)
 
+        print('Processing image...')
+
         # Run pipeline on image
         output_img = self.detect(input_img, draw_boxes)
 
         # Save image
         cv2.imwrite(output_path, output_img)
+
+        print(f'Processed image saved to {output_path}')
